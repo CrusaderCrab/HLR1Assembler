@@ -1,0 +1,45 @@
+/* Instruction Opcodes */
+0000000    /* ADD     */
+0000001    /* ADDC    */
+0000010    /* SUB     */
+0000011    /* SUBC    */
+0000100    /* SUBR    */
+0000101    /* SUBCR   */
+0000110    /* AND     */
+0000111    /* OR      */
+0001000    /* XOR     */
+0001001    /* SLL     */
+0001010    /* SRL     */
+0001011    /* SRA     */
+0001100    /* LDL     */
+0001101    /* LDSU    */
+0001110    /* LDSS    */
+0001111    /* LDBU    */
+0010000    /* LDBS    */
+0010001    /* STL     */
+0010010    /* STS     */
+0010011    /* STB     */
+0010100    /* JMP     */
+0010101    /* JMPR    */
+0010110    /* CALL    */
+0010111    /* CALLR   */
+0011000    /* RET     */
+0011001    /* RETINT  */
+0011010    /* CALLINT */
+0011011    /* LDHI    */
+0011100    /* GTLPC   */
+0011101    /* GETPSW  */
+0011110    /* PUTPSW  */
+0011111    /* ???     */
+1111111    /* HLR1 added instructions */
+/* Values to use as Condition markers in JMP and JMPR */
+00000      /* EQ Equal                  */
+00001      /* NE Not-Equal              */
+00010      /* LT Less signed            */
+00011      /* LE less/equal signed      */
+00100      /* GT greater signed         */
+00101      /* GE greater/equal signed   */
+00110      /* BL Less unsigned          */
+00111      /* BE less/equal unsigned    */
+01000      /* AB greater unsigned       */
+01001      /* AE greater/equal unsigned */

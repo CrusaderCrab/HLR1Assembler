@@ -1,0 +1,9 @@
+-i <file_path>  /* Sets the file to use as the source code. */
+-o <file_path>  /* Sets the file to write output to. Will overwrite/create file. */
+-c <file_path>  /* Sets the file to read the opcode binary values from. */
+-d <file_path>  /* Sets the file to read the default config details from. Configs in chosen
+                   file will be overwritten by any flags passed in. */
+-little         /* Sets assembler to use little endian. */
+//-v <0 to 31>    /* Sets the register that trap overflow will store it's ret address in. */
+//-u <0 to 31>
+-m <number>    /* Sets the address that the assembler will expect the code section to begin at. */

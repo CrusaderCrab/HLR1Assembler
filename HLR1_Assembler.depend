@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1482877751 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\main.cpp
+	<iostream>
+	"state.h"
+
+1482877856 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\state.h
+	<stdint.h>
+	<string>
+
