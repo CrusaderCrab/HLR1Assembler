@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include <vector>
 namespace HLR1{
 
     class State{
@@ -9,9 +10,9 @@ namespace HLR1{
         std::string m_outputPath;
         std::string m_configPath;
         std::string m_opcodePath;
-        std::arraylist<uint32_t> m_binary;
-        std::arraylist<uint32_t> m_opcodes;
-        std::arraylist<uint32_t> m_condCodes;
+        std::vector<uint32_t> m_binary;
+        std::vector<uint32_t> m_opcodes;
+        std::vector<uint32_t> m_condCodes;
         bool m_littleEndian;
         uint32_t m_trapOVRegister;
         uint32_t m_trapUNRegister;
