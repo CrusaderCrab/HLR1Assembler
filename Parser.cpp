@@ -7,6 +7,10 @@ namespace HLR1{
         inline explicit operator bool(){ return m_stream; }
         inline std::string errorMsg(){ return m_errorMsg; }
     };*/
+    size_t s_commentStartLength = 2;
+    size_t s_commentEndLength = 2;
+    std::string s_commentStart = "/*";
+    std::string s_commentEnd = "*/";
 
     Parser::Parser(std::string str)
     : m_stream(str), m_bad(false){}
@@ -19,26 +23,26 @@ namespace HLR1{
             std::string in;
             m_stream >> in;
             //check if starts with/contains a comment
-            size_t commentPos = in.find("/*");
+            size_t commentPos = in.find(s_commentStart);
             //starts with a comment started
             if(commentPos != std::string::npos && commentPos == 0){
-                in = in.substr(2); //remove comment starter
+                in = in.substr(s_commentStart.length()); //remove comment starter
                 if(in.length() == 0){
                     if(!m_stream){
-                        m_errorMsg = "Something went wrong reading a comment.";
+                        m_errorMsg = m_errorMsg.append(" : Something went wrong reading a comment");
                         return m_errorMsg;
                     }
                     m_stream >> in;
                 }
                 //eat up comment then get next word following it
                 while(true){
-                    commentPos = in.find("*/");
+                    commentPos = in.find(s_commentEnd);
                     //is just a comment end
-                    if(commentPos != std::string::npos && commentPos == 0 && in.length()==2){
+                    if(commentPos != std::string::npos && commentPos == 0 && in.length()==s_commentEnd.length()){
                         return getStr();
                     //starts with a comment end
                     }else if(commentPos != std::string::npos && commentPos == 0){
-                        in = in.substr(2);
+                        in = in.substr(s_commentEnd.length());
                         if(in.length()!= 0){
                             putback(in.length());
                         }
@@ -46,15 +50,15 @@ namespace HLR1{
                     //has a comment end somewhere in it
                     }else if(commentPos != std::string::npos){
                         //handle if word after the comment end
-                        if(in.length() > commentPos+2){
-                            in = in.substr(commentPos+2);
+                        if(in.length() > commentPos+s_commentEnd.length()){
+                            in = in.substr(commentPos+s_commentEnd.length());
                             putback(in.length());
                         }
                         return getStr();
                     }
                     //haven't found the end comment yet
                     if(!m_stream){
-                        m_errorMsg = "Something went wrong reading a comment.";
+                        m_errorMsg = m_errorMsg.append(" : Something went wrong reading a comment");
                         return m_errorMsg;
                     }
                     m_stream >> in;
