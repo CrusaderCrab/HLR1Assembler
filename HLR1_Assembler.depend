@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482883389 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\main.cpp
+1482884513 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\main.cpp
 	<iostream>
 	"state.h"
 	"Parser.h"
@@ -9,9 +9,9 @@
 	<string>
 	<vector>
 
-1482883100 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
+1482884570 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
 	<sstream>
 
-1482883442 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
+1482884618 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
 	"Parser.h"
 

@@ -9,7 +9,7 @@ namespace HLR1{
     };*/
 
     Parser::Parser(std::string str)
-    : m_stream(str){}
+    : m_stream(str), m_bad(false){}
 
     std::string Parser::getStr(){
         if(m_stream.eof()){
@@ -75,7 +75,31 @@ namespace HLR1{
     }
 
     uint32_t Parser::getValue(){
-        return 0;
+        if(m_stream.eof()){
+            return 0;
+        }
+        if(m_stream){
+            std::string str = getStr();
+            if(!m_stream){
+                    m_errorMsg = m_errorMsg.append(" : Issue reading value/number");
+                return 0;
+            }
+            std::istringstream nin(str);
+            uint32_t res;
+            if(str.find("0x")!=std::string::npos){
+                nin >> std::hex >> res;
+            }else{
+                nin >> res;
+            }
+            if(!nin){
+                m_bad = true;
+                m_errorMsg = "Could not parse as number: "+str;
+            }
+            return res;
+
+        }else{
+            return 0;
+        }
     }
 
     void Parser::putback(size_t n){

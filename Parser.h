@@ -5,6 +5,7 @@ namespace HLR1{
     class Parser{
     private:
         std::istringstream m_stream;
+        bool m_bad;
         std::string m_errorMsg;
         void putback(size_t n);
     public:
@@ -12,7 +13,7 @@ namespace HLR1{
         std::string getStr();
         uint32_t getValue();
 
-        inline explicit operator bool(){ return m_stream; }
+        inline explicit operator bool(){ return m_stream && !m_bad; }
         inline std::string errorMsg(){ return m_errorMsg; }
         inline bool eof() { return m_stream.eof(); }
     };
