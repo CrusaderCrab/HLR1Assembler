@@ -1,3 +1,4 @@
+#include <limits>
 #include "Parser.h"
 namespace HLR1{
 
@@ -7,14 +8,39 @@ namespace HLR1{
         inline explicit operator bool(){ return m_stream; }
         inline std::string errorMsg(){ return m_errorMsg; }
     };*/
-    size_t s_commentStartLength = 2;
-    size_t s_commentEndLength = 2;
-    std::string s_commentStart = "/*";
-    std::string s_commentEnd = "*/";
 
-    Parser::Parser(std::string str)
-    : m_stream(str), m_bad(false){}
 
+    Parser::Parser(std::string str, std::string lineComment)
+    : m_stream(str), m_lineComment(lineComment), m_bad(false){}
+
+    std::string Parser::getStr(){
+        if(m_stream.eof()){
+            return std::string();
+        }else if(m_stream){
+            std::string in;
+            m_stream >> in;
+            size_t lineComPos = in.find(m_lineComment);
+            //if there is a line comment
+            if(lineComPos != std::string::npos){
+                m_stream.ignore( std::numeric_limits<std::streamsize>::max(), '\n');
+                if(in.length() == m_lineComment.length()){
+                    return getStr();
+                }else{
+                    return in.substr(0, lineComPos);
+                }
+            }else{
+                return in;
+            }
+        }else{ //stream in a bad state
+            return std::string();
+        }
+    }
+
+    //size_t s_commentStartLength = 2;
+    //size_t s_commentEndLength = 2;
+    //std::string s_commentStart = "/*";
+    //std::string s_commentEnd = "*/";
+    /*
     std::string Parser::getStr(){
         if(m_stream.eof()){
             return std::string();
@@ -76,7 +102,7 @@ namespace HLR1{
         }else{
             return m_errorMsg;
         }
-    }
+    }*/
 
     uint32_t Parser::getValue(){
         if(m_stream.eof()){
@@ -97,7 +123,7 @@ namespace HLR1{
             }
             if(!nin){
                 m_bad = true;
-                m_errorMsg = "Could not parse as number: "+str;
+                m_errorMsg = "Could not parse as number: |"+str+"|";
             }
             return res;
 
