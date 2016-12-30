@@ -9,6 +9,15 @@ namespace HLR1{
         inline std::string errorMsg(){ return m_errorMsg; }
     };*/
 
+    /***    --ASSUMPTIONS--
+            1) A empty string will never be returned by getStr(), unless we are at eof or an error occurred
+    ***/
+
+    /***    --BUGS--
+            1) If input ends with whitespace, m_stream will not be at EOF but if call any getXXX method will
+               return empty string and set m_stream to bad state (as well as eof state)
+                -Solution--> Take next string preemptively and unset fail bit on last read, but keep eof set
+    ***/
 
     Parser::Parser(std::string str, std::string lineComment)
     : m_stream(str), m_lineComment(lineComment), m_bad(false){}
@@ -35,6 +44,69 @@ namespace HLR1{
             return std::string();
         }
     }
+
+    uint32_t Parser::getValue(){
+        if(m_stream.eof()){
+            return 0;
+        }
+        if(m_stream){
+            std::string str = getStr();
+            if(!m_stream){
+                appendError(" : Issue reading value/number");
+                return 0;
+            }
+            return parseValue(str);
+        }else{
+            return 0;
+        }
+    }
+
+    uint32_t Parser::parseValue(const std::string& str){
+        std::istringstream nin(str);
+        uint32_t res = 0;
+        if(str.find("0x")!=std::string::npos){
+            nin >> std::hex >> res;
+        }else{
+            nin >> res;
+        }
+        if(!nin){
+            appendError("Could not parse as number: \""+str+"\"");
+        }
+        return res;
+    }
+
+    uint32_t Parser::getRegister(){
+        if(m_stream.eof()){
+            return 0;
+        }
+        if(m_stream){
+            std::string str = getStr();
+            if(!m_stream){
+                appendError(" : Issue reading register");
+                return 0;
+            }
+            return parseRegister(str);
+
+        }else{
+            return -1;
+        }
+    }
+
+    uint32_t Parser::parseRegister(const std::string& str){
+        if(str.length() <= 0 || (str[0] != 'r' && str[0] != 'R')){
+            appendError(" : Expected a register. \""+str+"\"");
+            return 0;
+        }else{
+            return parseValue(str.substr(1, str.length()));
+        }
+    }
+
+    void Parser::putback(size_t n){
+        for(size_t i = 0; i < n; i++){
+            m_stream.unget();
+        }
+    }
+
 
     //size_t s_commentStartLength = 2;
     //size_t s_commentEndLength = 2;
@@ -103,40 +175,4 @@ namespace HLR1{
             return m_errorMsg;
         }
     }*/
-
-    uint32_t Parser::getValue(){
-        if(m_stream.eof()){
-            return 0;
-        }
-        if(m_stream){
-            std::string str = getStr();
-            if(!m_stream){
-                    m_errorMsg = m_errorMsg.append(" : Issue reading value/number");
-                return 0;
-            }
-            std::istringstream nin(str);
-            uint32_t res;
-            if(str.find("0x")!=std::string::npos){
-                nin >> std::hex >> res;
-            }else{
-                nin >> res;
-            }
-            if(!nin){
-                m_bad = true;
-                m_errorMsg = "Could not parse as number: |"+str+"|";
-            }
-            return res;
-
-        }else{
-            return 0;
-        }
-    }
-
-    void Parser::putback(size_t n){
-        for(int i = 0; i < n; i++){
-            m_stream.unget();
-        }
-    }
-
-
 }

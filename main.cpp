@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 //614400        /* Start address of code section in memory. Given as decimal. Default is 600Kbytes */   \
 //END           /* the end of the file */ ";
     //std::string input = "Yes4/*No5*/";
-    std::string input = "Yes1; I am a banana ; No \r\n\
+    /*std::string input = "Yes1; I am a banana ; No \r\n\
                          Yes2 ;                   \n\
                          ;                        \r\n\
                          Yes3; No                 \n\
@@ -28,13 +28,13 @@ int main(int argc, char *argv[])
         else std::cout<<str<<"\n";
         if(parser.eof()) std::cout <<"EOF\n";
         if(!parser) std::cout<<"ERR2: "<<parser.errorMsg()<<"\n";
-    }
+    }*/
 
     //std::string input2 = "100 -100 0x100 0x01 0x 0x/*6*/";
     //std::string input2 = "100 -100 0x100 0x01 /*6*/";
-    //std::string input2 = "100 -100 0x100 0x01 ;55 \
-    //                      99 ";
-    std::string input2 = "100 -100 ;55 \ ";
+    std::string input2 = "100 -100 0x100 0x01 ;55 \
+                          99 ";
+    //std::string input2 = "100 -100 ;55 \ ";
     HLR1::Parser parser2(input2);
     while(parser2 && !parser2.eof()){
         if(!parser2) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";

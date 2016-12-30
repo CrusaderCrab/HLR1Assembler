@@ -1,8 +1,8 @@
-in.hlr1s      /* The default input file. Can be relative or absolute. */
-out.hlr1b     /* The default output file. Can be relative or absolute. */
-defaultopcodes.txt /* The default opcode bindings for the instructions */
-false         /* Is Little-Endian. Either 'true' or 'false'. */
-/*2             /* Register to store ret address from trap Overflow function */
-/*2             /* Register to store ret address from trap underflow function */
-614400        /* Start address of code section in memory. Given as decimal. Default is 600Kbytes */
-END           /* the end of the file */
+in.hlr1s           # The default input file. Can be relative or absolute. 
+out.hlr1b          # The default output file. Can be relative or absolute. 
+defaultopcodes.txt # The default opcode bindings for the instructions 
+false              # Is Little-Endian. Either 'true' or 'false'. 
+#2                  # Register to store ret address from trap Overflow function 
+#2                  # Register to store ret address from trap underflow function 
+614400             # Start address of code section in memory. Given as decimal. Default is 600Kbytes 
+END                # the end of the file 
