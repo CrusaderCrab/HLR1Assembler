@@ -47,57 +47,65 @@ std::string Parser::getStr(){
 
 uint32_t Parser::getValue(){
     if(m_stream.eof()){
-        return 0;
+        return Parser::BAD_NUMBER;
     }
     if(m_stream){
         std::string str = getStr();
         if(!m_stream){
             appendError(" : Issue reading value/number");
-            return 0;
+            return Parser::BAD_NUMBER;
         }
         return parseValue(str);
     }else{
-        return 0;
+        return Parser::BAD_NUMBER;
     }
 }
 
 uint32_t Parser::parseValue(const std::string& str){
     std::istringstream nin(str);
-    uint32_t res = 0;
-    if(str.find("0x")!=std::string::npos){
+    uint32_t res = Parser::BAD_NUMBER;
+    if(str.find("0x")!=std::string::npos || str.find("0X")!=std::string::npos){
         nin >> std::hex >> res;
     }else{
         nin >> res;
     }
     if(!nin){
         appendError("Could not parse as number: \""+str+"\"");
+        res = Parser::BAD_NUMBER;
     }
     return res;
 }
 
 uint32_t Parser::getRegister(){
     if(m_stream.eof()){
-        return 0;
+        return Parser::BAD_NUMBER;
     }
     if(m_stream){
         std::string str = getStr();
         if(!m_stream){
             appendError(" : Issue reading register");
-            return 0;
+            return Parser::BAD_NUMBER;
         }
         return parseRegister(str);
 
     }else{
-        return -1;
+        return Parser::BAD_NUMBER;
     }
 }
 
 uint32_t Parser::parseRegister(const std::string& str){
     if(str.length() <= 0 || (str[0] != 'r' && str[0] != 'R')){
         appendError(" : Expected a register. \""+str+"\"");
-        return 0;
+        return Parser::BAD_NUMBER;
     }else{
         return parseValue(str.substr(1, str.length()));
+    }
+}
+
+void Parser::skip(){
+    if(good() && !m_stream.eof()){
+        std::string s;
+        m_stream >> s;
     }
 }
 

@@ -9,17 +9,18 @@
 	<string>
 	<vector>
 
-1483142737 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
+1483145539 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
 	<sstream>
 
-1483142728 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
+1483145764 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
 	<limits>
+	<iostream>
 	"Parser.h"
 
 1483142559 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\testmain.cpp
 	"catch.hpp"
 
-1483143301 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\parsertest.cpp
+1483145816 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\parsertest.cpp
 	"catch.hpp"
 	"../Parser.h"
 
