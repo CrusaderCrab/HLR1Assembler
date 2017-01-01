@@ -3,23 +3,12 @@
 
 namespace HLR1{
 
-/*unsigned int Factorial( unsigned int number ) {
-    return number <= 1 ? number : Factorial(number-1)*number;
-}
-
-TEST_CASE( "Factorials are computed", "[factorial]" ) {
-    REQUIRE( Factorial(1) == 1 );
-    REQUIRE( Factorial(2) == 2 );
-    REQUIRE( Factorial(3) == 6 );
-    REQUIRE( Factorial(10) == 3628800 );
-}*/
-
 std::string s_goodLineCommentInput = "\
     Yes1; No1                   \n\
     Yes2 ; No2                  \n\
     ;No3                        \n\
     Yes3                          \
-";
+";/*
 TEST_CASE( "Correctly successfully parse line comments", "[Parser]") {
     Parser p(s_goodLineCommentInput);
     REQUIRE(p.getStr()=="Yes1");
@@ -50,9 +39,35 @@ TEST_CASE( "Correctly fail to get numbers", "[Parser]") {
         REQUIRE(p.getValue()==Parser::BAD_NUMBER); REQUIRE(!p);}
     SECTION("Hex broken by a line comment"){ p.skip(); p.skip(); p.skip(); p.skip();
         REQUIRE(p.getValue()==Parser::BAD_NUMBER); REQUIRE(!p);}
-
-
-
 }
 
+std::string s_goodRegisterInput = "R15 r02 R0 r4564 R33 ";
+TEST_CASE("Correctly Successfully get registers", "[Registers]"){
+    Parser p(s_goodRegisterInput);
+    REQUIRE(p.getRegister()==15);
+    REQUIRE(p.getRegister()==2);
+    REQUIRE(p.getRegister()==0);
+    REQUIRE(p.getRegister()==4564);
+    REQUIRE(p.getRegister()==33);
+}
+
+std::string s_badRegisterInput = "R r0x10 R0x11 rr11 RR22 R-100";
+TEST_CASE("Correctly fail to get registers", "[Registers]"){
+    Parser p(s_badRegisterInput);
+    REQUIRE(Parser::BAD_NUMBER);
+    SECTION("No register number"){
+        REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p); }
+    SECTION("Hexidecimal register number given - lower r"){ p.skip();
+        REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p);}
+    SECTION("Hexidecimal register number given - upper R"){ p.skip(); p.skip();
+        REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p);}
+    ///Can't have more then six sections or else can't find Parser::BAD_NUMBER when linking?
+    //SECTION("two lower rs used \"rr11\""){ p.skip(); p.skip(); p.skip();
+    //    REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p);}
+    SECTION("two upper Rs used \"RR22\""){ p.skip(); p.skip(); p.skip(); p.skip();
+        REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p);}
+    SECTION("Negative register number"){ p.skip(); p.skip(); p.skip(); p.skip(); p.skip();
+        REQUIRE(p.getRegister()==Parser::BAD_NUMBER); REQUIRE(!p);}
+}
+*/
 }//namespace HLR1
