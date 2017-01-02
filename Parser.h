@@ -1,10 +1,11 @@
 #pragma once
 #include <sstream>
+#include "TokenStream.h"
 namespace HLR1{
 
 class Parser{
 private:
-    std::istringstream m_stream;
+    TokenStream m_stream;
     std::string m_lineComment;
     bool m_bad;
     std::string m_errorMsg;

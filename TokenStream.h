@@ -7,13 +7,12 @@ private:
     std::istringstream m_stream;
     std::string m_nextToken;
     std::string m_errorMsg;
-    bool m_bad;
     uint32_t m_rowNum;
     uint32_t m_colNum;
     uint32_t m_oldRowColNum;
     uint32_t m_tokStartRow;
     uint32_t m_tokStartCol;
-    inline bool remain(){ return m_stream && !m_bad; }
+    inline bool remain(){ return m_stream; }
     void getNext();
     void consumeWhitespace();
     inline char getChar(){
@@ -30,6 +29,7 @@ private:
     void putBack(char ch);
     std::string getString();
 public:
+    static const uint32_t s_NO_POSITION = 0;
     TokenStream(const std::string& in);
     inline explicit operator bool(){ return remain(); }
     inline std::string errorMsg(){ return m_errorMsg; }
@@ -40,7 +40,7 @@ public:
     inline uint32_t getTokenColNumber(){ return m_tokStartCol; }
 
     std::string getToken();
-    void skipTilNewLine();
+    //void skipTilNewLine();
 
 };
 
