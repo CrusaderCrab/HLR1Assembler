@@ -32,7 +32,7 @@ std::string Parser::getStr(){
             if(m_stream){
                 uint32_t nextRow = m_stream.getTokenRowNumber();
                 while(m_stream && nextRow == tokenRow){
-                    m_stream.getToken();
+                    std::string tk = m_stream.getToken();
                     nextRow = m_stream.getTokenRowNumber();
                 }
             }
@@ -70,7 +70,7 @@ uint32_t Parser::parseValue(const std::string& str){
     }else{
         nin >> res;
     }
-    if(!nin){
+    if(!nin || !nin.eof()){
         appendError("Could not parse as number: \""+str+"\"");
         res = Parser::BAD_NUMBER;
     }
@@ -80,7 +80,7 @@ uint32_t Parser::parseValue(const std::string& str){
 uint32_t Parser::getRegister(){
     if(m_stream){
         std::string str = getStr();
-        if(!m_stream){
+        if(!m_stream && !m_stream.eof()){
             appendError(" : Issue reading register");
             return Parser::BAD_NUMBER;
         }

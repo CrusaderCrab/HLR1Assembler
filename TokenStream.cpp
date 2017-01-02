@@ -10,13 +10,13 @@ TokenStream::TokenStream(const std::string& in)
 
 std::string TokenStream::getString(){
     std::string token;
-    if(!eof() && remain()){
+    if(!(eof() || m_stream.fail())){
         char ch = getChar();
-        while(remain() && (ch!='\n' && ch!='\t' && ch != ' ' && ch!='\r')){
+        while(!(eof() || m_stream.fail()) && (ch!='\n' && ch!='\t' && ch != ' ' && ch!='\r')){
             token.push_back(ch);
             ch = getChar();
         }
-        if(remain()){
+        if(!(eof() || m_stream.fail())){
             putBack(ch);
         }
     }
@@ -25,7 +25,7 @@ std::string TokenStream::getString(){
 
 void TokenStream::getNext(){
     consumeWhitespace();
-    if(!remain()){
+    if((eof() || m_stream.fail())){
         m_nextToken = std::string();
         m_tokStartRow = s_NO_POSITION;
         m_tokStartCol = s_NO_POSITION;
@@ -38,12 +38,12 @@ void TokenStream::getNext(){
 }
 
 void TokenStream::consumeWhitespace(){
-    if(remain()){
+    if(!(eof() || m_stream.fail())){
         char ch = getChar();
-        while(remain() && (ch=='\n' || ch=='\t' || ch == ' ' || ch=='\r')){
+        while(!(eof() || m_stream.fail()) && (ch=='\n' || ch=='\t' || ch == ' ' || ch=='\r')){
             ch = getChar();
         }
-        if(remain()){
+        if(!(eof() || m_stream.fail())){
             putBack(ch);
         }
     }

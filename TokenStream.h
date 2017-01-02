@@ -12,7 +12,6 @@ private:
     uint32_t m_oldRowColNum;
     uint32_t m_tokStartRow;
     uint32_t m_tokStartCol;
-    inline bool remain(){ return m_stream; }
     void getNext();
     void consumeWhitespace();
     inline char getChar(){
@@ -31,7 +30,7 @@ private:
 public:
     static const uint32_t s_NO_POSITION = 0;
     TokenStream(const std::string& in);
-    inline explicit operator bool(){ return remain() || m_nextToken.length()!=0; }
+    inline explicit operator bool(){ return m_stream.fail() || m_nextToken.length()!=0; }
     inline std::string errorMsg(){ return m_errorMsg; }
     inline bool eof() { return m_stream.eof(); }
     inline uint32_t getCurrentRowNumber(){ return m_rowNum; }

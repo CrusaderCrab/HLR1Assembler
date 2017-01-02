@@ -2,20 +2,22 @@
 #include "../Parser.h"
 
 namespace HLR1{
-
+/*
 uint32_t BAD_NUMBER_copy = Parser::BAD_NUMBER;
 
 std::string s_goodLineCommentInput = "\
     Yes1; No1                   \n\
     Yes2 ; No2                  \n\
     ;No3                        \n\
-    Yes3                          \
+    Yes3                        \n\
+    Yes4   ;No1 No2               \
 ";
 TEST_CASE( "Correctly successfully parse line comments", "[Parser]") {
     Parser p(s_goodLineCommentInput);
     REQUIRE(p.getStr()=="Yes1");
     REQUIRE(p.getStr()=="Yes2");
     REQUIRE(p.getStr()=="Yes3");
+    REQUIRE(p.getStr()=="Yes4");
 }
 
 std::string s_goodNumberInput = "100 -100 0x100 -0x100 0X134 ";
@@ -28,7 +30,7 @@ TEST_CASE( "Correctly successfully get numbers", "[Parser]") {
     REQUIRE(p.getValue()==0X134);
 
 }
-/*
+
 std::string s_badNumberInput = "abc 00x55 x100 0x-100 0x;10 ";
 TEST_CASE( "Correctly fail to get numbers", "[Parser]") {
     Parser p(s_badNumberInput);
@@ -52,7 +54,7 @@ TEST_CASE("Correctly Successfully get registers", "[Registers]"){
     REQUIRE(p.getRegister()==4564);
     REQUIRE(p.getRegister()==33);
 }
-
+/*
 std::string s_badRegisterInput = "R r0x10 R0x11 rr11 RR22 R-100";
 TEST_CASE("Correctly fail to get registers", "[Registers]"){
     Parser p(s_badRegisterInput);
