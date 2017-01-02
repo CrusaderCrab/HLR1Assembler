@@ -20,6 +20,23 @@ TEST_CASE( "Correctly successfully parse line comments", "[Parser]") {
     REQUIRE(p.getStr()=="Yes4");
 }
 
+std::string s_goodFilePathInput = " \
+    yes1Path yes2Path/Yes2.1Path yes3Path\\Yes3.1Path \
+    yes4Path\\Yes4.1Path\\Yes4.2Path                  \
+    \"yes5Path\" \"\" \" yes6Path\" \"yes7Path \"     \
+";
+TEST_CASE( "Correctly successfully parse filepaths", "[Parser]") {
+    Parser p(s_goodFilePathInput);
+    REQUIRE(p.getFilePath()=="yes1Path");
+    REQUIRE(p.getFilePath()=="yes2Path/Yes2.1Path");
+    REQUIRE(p.getFilePath()=="yes3Path\\Yes3.1Path");
+    REQUIRE(p.getFilePath()=="yes4Path\\Yes4.1Path\\Yes4.2Path");
+    REQUIRE(p.getFilePath()=="yes5Path");
+    REQUIRE(p.getFilePath()=="");
+    REQUIRE(p.getFilePath()=="yes6Path");
+    REQUIRE(p.getFilePath()=="yes7Path");
+}
+
 std::string s_goodNumberInput = "100 -100 0x100 -0x100 0X134 ";
 TEST_CASE( "Correctly successfully get numbers", "[Parser]") {
     Parser p(s_goodNumberInput);

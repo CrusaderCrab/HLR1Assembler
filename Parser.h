@@ -18,6 +18,7 @@ public:
     static const uint32_t BAD_NUMBER = ((uint32_t)-1);
     Parser(std::string str, std::string lineComment=";");
     std::string getStr();
+    std::string getFilePath();
     uint32_t getValue();
     uint32_t parseValue(const std::string& str);
     uint32_t getRegister();

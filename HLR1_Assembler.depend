@@ -9,11 +9,11 @@
 	<string>
 	<vector>
 
-1483320481 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
+1483358318 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
 	<sstream>
 	"TokenStream.h"
 
-1483354869 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
+1483360116 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
 	<limits>
 	<iostream>
 	"Parser.h"
@@ -21,7 +21,7 @@
 1483142559 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\testmain.cpp
 	"catch.hpp"
 
-1483354787 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\parsertest.cpp
+1483360148 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\parsertest.cpp
 	"catch.hpp"
 	"../Parser.h"
 
@@ -151,4 +151,14 @@
 1483354905 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\tokenstreamtest.cpp
 	"catch.hpp"
 	"../TokenStream.h"
+
+1483358091 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\state.cpp
+	"state.h"
+	"Parser.h"
+	"OpCodes.h"
+	"CondCodes.h"
+
+1483356717 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\opcodes.h
+
+1483356524 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\condcodes.h
 

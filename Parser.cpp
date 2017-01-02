@@ -52,6 +52,42 @@ std::string Parser::getStr(){
     }
 }
 
+std::string Parser::getFilePath(){
+    if(m_stream){
+        std::string firstSeg = getStr();
+        size_t quotePos = firstSeg.find('\"');
+        if(quotePos==std::string::npos){
+            return firstSeg;
+        }else if(quotePos==0){ //first position
+            //remove quote mark from filePath
+            //if(!firstSeg.empty()){
+            //    firstSeg = firstSeg.substr(1, firstSeg.length());
+            //}else{
+            //    firstSeg = std::string();
+            //}
+            //std::cout<<"FP1: |"<<firstSeg<<"|"<<std::endl;
+            if(firstSeg.length() == 1 || firstSeg[firstSeg.length() - 1] != '\"'){
+                std::string nextSection = getStr();
+                //std::cout<<"FP2: "<<nextSection<<std::endl;
+                while( m_stream && nextSection[nextSection.length() - 1] != '\"'){
+                    firstSeg.append(nextSection);
+                    nextSection = getStr();
+                }
+                if(nextSection[nextSection.length() - 1] != '\"'){
+                    appendError(" : Unable to read file Path. Couldn't find close quote.");
+                    return std::string();
+                }
+                firstSeg.append(nextSection);
+            }
+            //std::cout<<"FP End: "<< firstSeg.substr(1, firstSeg.length()-2) << std::endl;
+            return firstSeg.substr(1, firstSeg.length()-2);
+        }else{
+            appendError(" : Unable to read file Path. Double quote embedded in filepath.");
+            return std::string();
+        }
+    }
+}
+
 uint32_t Parser::getValue(){
     if(m_stream){
         std::string str = getStr();
