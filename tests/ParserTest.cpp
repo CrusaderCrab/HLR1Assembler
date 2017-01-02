@@ -2,7 +2,7 @@
 #include "../Parser.h"
 
 namespace HLR1{
-/*
+
 uint32_t BAD_NUMBER_copy = Parser::BAD_NUMBER;
 
 std::string s_goodLineCommentInput = "\

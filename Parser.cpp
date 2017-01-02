@@ -28,7 +28,7 @@ std::string Parser::getStr(){
         m_currentTokenCol = m_stream.getTokenColNumber();
         m_currentTokenRow = m_stream.getTokenRowNumber();
         std::string in = m_stream.getToken();
-        std::cout<<"Tok: "<<m_currentTokenCol<<" "<<in<<std::endl;
+        //std::cout<<"Tok: "<<m_currentTokenCol<<" "<<in<<std::endl;
         size_t lineComPos = in.find(m_lineComment);
         //if there is a line comment
         if(lineComPos != std::string::npos){
@@ -104,7 +104,7 @@ uint32_t Parser::parseRegister(const std::string& str){
 }
 
 void Parser::appendError(const std::string& str){
-        std::cout<<"Tok2: "<<m_currentTokenCol<<std::endl;
+    //std::cout<<"Tok2: "<<m_currentTokenCol<<std::endl;
     m_bad = true;
     std::ostringstream ost;
     ost << str << " Row: " << m_currentTokenRow << " Col: " << m_currentTokenCol;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "state.h"
 #include "Parser.h"
+#include "CondCodes.h"
 using namespace std;
 
 int main(int argc, char *argv[])
