@@ -2,17 +2,16 @@
 #include <sstream>
 namespace HLR1{
 
-class Parser{
+class LineParser{
 private:
     std::istringstream m_stream;
     bool m_bad;
     std::string m_errorMsg;
-    //void putback(size_t n);
     void appendError(const std::string& str);
     static std::string removeComments(const std::string& line, const std::string& comment);
 public:
-    static const uint32_t BAD_NUMBER = ((uint32_t)-1);
-    Parser(std::string str, std::string lineComment=";");
+    static const uint32_t s_BAD_NUMBER = ((uint32_t)-1);
+    LineParser(std::string str, std::string lineComment=";");
     std::string getStr();
     std::string getFilePath();
     uint32_t getValue();

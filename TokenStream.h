@@ -17,9 +17,7 @@ private:
     void consumeWhitespace();
     inline char getChar(){
         char ch;
-        //std::cout<<"PreGet: "<<m_stream.eof()<<" : "<<m_stream.fail()<<std::endl;
         m_stream.get(ch);
-        //std::cout<<"PostGet: "<<m_stream.eof()<<" : "<<m_stream.fail()<<" Char: "<<ch<<std::endl;
         m_colNum++;
         if(ch=='\n'){
             m_oldRowColNum = m_colNum;
@@ -43,8 +41,6 @@ public:
     inline uint32_t getTokenColNumber(){ return m_tokStartCol; }
 
     std::string getToken();
-    //void skipTilNewLine();
-
 };
 
 

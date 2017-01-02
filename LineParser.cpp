@@ -1,10 +1,10 @@
 #include <limits>
 #include <iostream>
-#include "Parser.h"
+#include "LineParser.h"
 namespace HLR1{
 
 /***    --ASSUMPTIONS--
-        1) A empty string will never be returned by getStr(), unless we have used upthe entire input string
+        1) A empty string will never be returned by getStr(), unless we have used up the entire input string
 ***/
 
 /***    --BUGS--
@@ -13,10 +13,10 @@ namespace HLR1{
         3) Unfound Filepath bugs nearly certainly
 ***/
 
-Parser::Parser(std::string str, std::string lineComment)
+LineParser::LineParser(std::string str, std::string lineComment)
 : m_stream(removeComments(str, lineComment)), m_bad(false){}
 
-std::string Parser::removeComments(const std::string& line, const std::string& comment){
+std::string LineParser::removeComments(const std::string& line, const std::string& comment){
     size_t cp = line.find(comment);
     if(cp!=std::string::npos){
         return line.substr(0, cp);
@@ -25,7 +25,7 @@ std::string Parser::removeComments(const std::string& line, const std::string& c
     }
 }
 
-std::string Parser::getStr(){
+std::string LineParser::getStr(){
     if(!fail()){
         std::string in;
         m_stream >> in;
@@ -38,7 +38,7 @@ std::string Parser::getStr(){
     }
 }
 
-std::string Parser::getFilePath(){
+std::string LineParser::getFilePath(){
     if(!fail()){
         std::string firstSeg = getStr();
         size_t quotePos = firstSeg.find('\"');
@@ -65,18 +65,18 @@ std::string Parser::getFilePath(){
     }
 }
 
-uint32_t Parser::getValue(){
+uint32_t LineParser::getValue(){
     if(m_stream){
         std::string str = getStr();
         return parseValue(str);
     }else{ //stream in a bad/eof state
-        return Parser::BAD_NUMBER;
+        return s_BAD_NUMBER;
     }
 }
 
-uint32_t Parser::parseValue(const std::string& str){
+uint32_t LineParser::parseValue(const std::string& str){
     std::istringstream nin(str);
-    uint32_t res = Parser::BAD_NUMBER;
+    uint32_t res = s_BAD_NUMBER;
     if(str.find("0x")!=std::string::npos || str.find("0X")!=std::string::npos){
         nin >> std::hex >> res;
     }else{
@@ -84,38 +84,38 @@ uint32_t Parser::parseValue(const std::string& str){
     }
     if(!nin || !nin.eof()){
         appendError("Could not parse as number: \""+str+"\"");
-        res = Parser::BAD_NUMBER;
+        res = s_BAD_NUMBER;
     }
     return res;
 }
 
-uint32_t Parser::getRegister(){
+uint32_t LineParser::getRegister(){
     if(m_stream){
         std::string str = getStr();
         return parseRegister(str);
 
     }else{
-        return Parser::BAD_NUMBER;
+        return s_BAD_NUMBER;
     }
 }
 
-uint32_t Parser::parseRegister(const std::string& str){
+uint32_t LineParser::parseRegister(const std::string& str){
     if(str.length() <= 0 || (str[0] != 'r' && str[0] != 'R')){
         appendError(" : Expected a register. \""+str+"\"");
-        return Parser::BAD_NUMBER;
+        return s_BAD_NUMBER;
     }else{
         return parseValue(str.substr(1, str.length()));
     }
 }
 
-void Parser::appendError(const std::string& str){
+void LineParser::appendError(const std::string& str){
     m_bad = true;
     std::ostringstream ost;
     ost << str;
     m_errorMsg.append(ost.str());
 }
 
-void Parser::skip(){
+void LineParser::skip(){
     if(!fail()){
         std::string s;
         m_stream >> s;

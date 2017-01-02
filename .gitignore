@@ -3,3 +3,6 @@ obj/**
 HLR1_Assembler.cbp
 HLR1_Assembler.depend
 HLR1_Assembler.layout
+Parser.h
+Parser.cpp
+Tests/ParserTest.cpp

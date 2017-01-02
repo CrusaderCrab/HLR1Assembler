@@ -1,6 +1,6 @@
 #include <iostream>
 #include "state.h"
-#include "Parser.h"
+#include "LineParser.h"
 #include "CondCodes.h"
 using namespace std;
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     std::string input2 = "100 -100 0x100 0x01 ;55 \
                           99 ";
     //std::string input2 = "100 -100 ;55 \ ";
-    HLR1::Parser parser2(input2);
+    HLR1::LineParser parser2(input2);
     while(!parser2.eof()){
         if(!parser2) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";
         uint32_t val = parser2.getValue();

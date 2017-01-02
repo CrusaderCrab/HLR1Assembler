@@ -1,5 +1,5 @@
-#include "state.h"
-#include "Parser.h"
+#include "State.h"
+#include "LineParser.h"
 #include "OpCodes.h"
 #include "CondCodes.h"
 

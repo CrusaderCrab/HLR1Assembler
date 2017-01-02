@@ -18,6 +18,7 @@ TEST_CASE( "Correctly successfully parse line comments", "[Parser]") {
     REQUIRE(p.getStr()=="Yes2");
     REQUIRE(p.getStr()=="Yes3");
     REQUIRE(p.getStr()=="Yes4");
+    REQUIRE(p.eof());
 }
 
 std::string s_goodFilePathInput = " \

@@ -48,17 +48,7 @@ void TokenStream::consumeWhitespace(){
         }
     }
 }
-/*void TokenStream::skipTilNewLine(){
-    if(remain()){
-        char ch = getChar();
-        while(remain() && ch!='\n'){
-            ch = getChar();
-        }
-        if(remain()){
-            getNext();
-        }
-    }
-}*/
+
 std::string TokenStream::getToken(){
     std::string n = m_nextToken;
     getNext();
