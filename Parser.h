@@ -9,7 +9,7 @@ private:
     std::string m_lineComment;
     bool m_bad;
     std::string m_errorMsg;
-    void putback(size_t n);
+    //void putback(size_t n);
     inline void appendError(const std::string& str){
         m_bad = true;
         m_errorMsg.append(str);

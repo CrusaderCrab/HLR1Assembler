@@ -31,7 +31,7 @@ private:
 public:
     static const uint32_t s_NO_POSITION = 0;
     TokenStream(const std::string& in);
-    inline explicit operator bool(){ return remain(); }
+    inline explicit operator bool(){ return remain() || m_nextToken.length()!=0; }
     inline std::string errorMsg(){ return m_errorMsg; }
     inline bool eof() { return m_stream.eof(); }
     inline uint32_t getCurrentRowNumber(){ return m_rowNum; }

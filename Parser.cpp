@@ -1,4 +1,5 @@
 #include <limits>
+#include <iostream>
 #include "Parser.h"
 namespace HLR1{
 
@@ -14,49 +15,49 @@ namespace HLR1{
 ***/
 
 /***    --BUGS--
-        1) If input ends with whitespace, m_stream will not be at EOF but if call any getXXX method will
-           return empty string and set m_stream to bad state (as well as eof state)
-            -Solution--> Take next string preemptively and unset fail bit on last read, but keep eof set
+        1) Allows many types of incorrect register definitions.
+        2) Poor error messages
 ***/
 
 Parser::Parser(std::string str, std::string lineComment)
 : m_stream(str), m_lineComment(lineComment), m_bad(false){}
 
 std::string Parser::getStr(){
-    if(m_stream.eof()){
-        return std::string();
-    }else if(m_stream){
-        std::string in;
-        m_stream >> in;
+    if(m_stream){
+        uint32_t tokenRow = m_stream.getTokenRowNumber();
+        std::string in = m_stream.getToken();
         size_t lineComPos = in.find(m_lineComment);
         //if there is a line comment
         if(lineComPos != std::string::npos){
-            m_stream.ignore( std::numeric_limits<std::streamsize>::max(), '\n');
+            if(m_stream){
+                uint32_t nextRow = m_stream.getTokenRowNumber();
+                while(m_stream && nextRow == tokenRow){
+                    m_stream.getToken();
+                    nextRow = m_stream.getTokenRowNumber();
+                }
+            }
             if(lineComPos == 0){
                 return getStr();
             }else{
                 return in.substr(0, lineComPos);
             }
-        }else{
+        }else{ //no line comment
             return in;
         }
-    }else{ //stream in a bad state
+    }else{ //stream in a bad/eof state
         return std::string();
     }
 }
 
 uint32_t Parser::getValue(){
-    if(m_stream.eof()){
-        return Parser::BAD_NUMBER;
-    }
     if(m_stream){
         std::string str = getStr();
-        if(!m_stream){
+        if(!m_stream && !m_stream.eof()){
             appendError(" : Issue reading value/number");
             return Parser::BAD_NUMBER;
         }
         return parseValue(str);
-    }else{
+    }else{ //stream in a bad/eof state
         return Parser::BAD_NUMBER;
     }
 }
@@ -77,9 +78,6 @@ uint32_t Parser::parseValue(const std::string& str){
 }
 
 uint32_t Parser::getRegister(){
-    if(m_stream.eof()){
-        return Parser::BAD_NUMBER;
-    }
     if(m_stream){
         std::string str = getStr();
         if(!m_stream){
@@ -103,17 +101,16 @@ uint32_t Parser::parseRegister(const std::string& str){
 }
 
 void Parser::skip(){
-    if(good() && !m_stream.eof()){
-        std::string s;
-        m_stream >> s;
+    if(m_stream){
+        m_stream.getToken();
     }
 }
 
-void Parser::putback(size_t n){
+/*void Parser::putback(size_t n){
     for(size_t i = 0; i < n; i++){
         m_stream.unget();
     }
-}
+}*/
 
 
 //size_t s_commentStartLength = 2;
