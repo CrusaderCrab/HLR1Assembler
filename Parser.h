@@ -9,11 +9,10 @@ private:
     std::string m_lineComment;
     bool m_bad;
     std::string m_errorMsg;
+    uint32_t m_currentTokenRow;
+    uint32_t m_currentTokenCol;
     //void putback(size_t n);
-    inline void appendError(const std::string& str){
-        m_bad = true;
-        m_errorMsg.append(str);
-    }
+    void appendError(const std::string& str);
     inline bool good(){ return m_stream && !m_bad; }
 public:
     static const uint32_t BAD_NUMBER = ((uint32_t)-1);

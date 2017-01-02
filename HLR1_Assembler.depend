@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1483318159 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\main.cpp
+1483320990 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\main.cpp
 	<iostream>
 	"state.h"
 	"Parser.h"
@@ -9,11 +9,11 @@
 	<string>
 	<vector>
 
-1483316586 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
+1483320481 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.h
 	<sstream>
 	"TokenStream.h"
 
-1483318764 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
+1483320937 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\parser.cpp
 	<limits>
 	<iostream>
 	"Parser.h"
@@ -140,14 +140,15 @@
 	<iomanip>
 	<assert.h>
 
-1483315192 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tokenstream.cpp
+1483319489 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tokenstream.cpp
 	"TokenStream.h"
 	<iostream>
 
-1483318984 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tokenstream.h
+1483320968 d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tokenstream.h
 	<sstream>
+	<iostream>
 
-1483315939 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\tokenstreamtest.cpp
+1483319412 source:d:\myprograms\hlr1\hlr1_assembler_project\code\hlr1_assembler\tests\tokenstreamtest.cpp
 	"catch.hpp"
 	"../TokenStream.h"
 

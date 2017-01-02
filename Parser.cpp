@@ -20,18 +20,21 @@ namespace HLR1{
 ***/
 
 Parser::Parser(std::string str, std::string lineComment)
-: m_stream(str), m_lineComment(lineComment), m_bad(false){}
+: m_stream(str), m_lineComment(lineComment), m_bad(false),
+  m_currentTokenRow(BAD_NUMBER), m_currentTokenCol(BAD_NUMBER){}
 
 std::string Parser::getStr(){
     if(m_stream){
-        uint32_t tokenRow = m_stream.getTokenRowNumber();
+        m_currentTokenCol = m_stream.getTokenColNumber();
+        m_currentTokenRow = m_stream.getTokenRowNumber();
         std::string in = m_stream.getToken();
+        std::cout<<"Tok: "<<m_currentTokenCol<<" "<<in<<std::endl;
         size_t lineComPos = in.find(m_lineComment);
         //if there is a line comment
         if(lineComPos != std::string::npos){
             if(m_stream){
                 uint32_t nextRow = m_stream.getTokenRowNumber();
-                while(m_stream && nextRow == tokenRow){
+                while(m_stream && nextRow == m_currentTokenRow){
                     std::string tk = m_stream.getToken();
                     nextRow = m_stream.getTokenRowNumber();
                 }
@@ -98,6 +101,14 @@ uint32_t Parser::parseRegister(const std::string& str){
     }else{
         return parseValue(str.substr(1, str.length()));
     }
+}
+
+void Parser::appendError(const std::string& str){
+        std::cout<<"Tok2: "<<m_currentTokenCol<<std::endl;
+    m_bad = true;
+    std::ostringstream ost;
+    ost << str << " Row: " << m_currentTokenRow << " Col: " << m_currentTokenCol;
+    m_errorMsg.append(ost.str());
 }
 
 void Parser::skip(){

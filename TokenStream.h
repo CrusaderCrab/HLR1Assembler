@@ -1,5 +1,6 @@
 #pragma once
 #include <sstream>
+#include <iostream>
 namespace HLR1{
 
 class TokenStream{
@@ -16,7 +17,9 @@ private:
     void consumeWhitespace();
     inline char getChar(){
         char ch;
+        //std::cout<<"PreGet: "<<m_stream.eof()<<" : "<<m_stream.fail()<<std::endl;
         m_stream.get(ch);
+        //std::cout<<"PostGet: "<<m_stream.eof()<<" : "<<m_stream.fail()<<" Char: "<<ch<<std::endl;
         m_colNum++;
         if(ch=='\n'){
             m_oldRowColNum = m_colNum;
@@ -31,8 +34,9 @@ public:
     static const uint32_t s_NO_POSITION = 0;
     TokenStream(const std::string& in);
     inline explicit operator bool(){ return m_stream.fail() || m_nextToken.length()!=0; }
+    inline bool fail(){ return m_stream.fail(); }
     inline std::string errorMsg(){ return m_errorMsg; }
-    inline bool eof() { return m_stream.eof(); }
+    inline bool eof() { return m_stream.eof() && m_nextToken.length()==0; }
     inline uint32_t getCurrentRowNumber(){ return m_rowNum; }
     inline uint32_t getCurrentColNumber(){ return m_colNum; }
     inline uint32_t getTokenRowNumber(){ return m_tokStartRow; }
