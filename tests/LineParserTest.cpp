@@ -2,7 +2,6 @@
 #include "../LineParser.h"
 
 namespace HLR1{
-
 //  Needed as linking error with LineParser::s_BAD_NUMBER if used
 //+ more then 6 times in a TEST_CASE
 uint32_t BAD_NUMBER_copy = LineParser::s_BAD_NUMBER;

@@ -17,8 +17,13 @@ private:
     uint32_t m_trapOVRegister;
     uint32_t m_trapUNRegister;
     uint32_t m_codeStartAddr;
+    bool m_bad;
+    std::string m_errorMsg;
+    void readConfig();
+    void openFileStream(std::ifstream& ss, const std::string& path);
+    void setError(std::string s);
 public:
-    State(int argc, char* argv[]);
+    State(size_t argc, char* argv[]);
     uint32_t getWord(uint32_t addr);
     void putWord(uint32_t addr, uint32_t v);
     void putHalfWord(uint32_t addr, uint32_t v);

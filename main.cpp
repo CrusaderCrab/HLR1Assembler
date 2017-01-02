@@ -4,7 +4,7 @@
 #include "CondCodes.h"
 using namespace std;
 
-int main(int argc, char *argv[])
+int main(size_t argc, char *argv[])
 {
 //    std::string input = "Yes1\nYes2 /* No1 */ /**/ Yes3 /*No2*//*No3*//**/Yes4/*No5*/                 \
 //                          in.hlr1s      /* The default input file. Can be relative or absolute. */    \
@@ -37,11 +37,11 @@ int main(int argc, char *argv[])
                           99 ";
     //std::string input2 = "100 -100 ;55 \ ";
     HLR1::LineParser parser2(input2);
-    while(!parser2.eof()){
-        if(!parser2) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";
+    while(!parser2.fail()){
+        if(!parser2.fail()) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";
         uint32_t val = parser2.getValue();
         std::cout<<val<<"\n";
         if(parser2.eof()) std::cout <<"EOF\n";
-        if(!parser2) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";
+        if(!parser2.fail()) std::cout<<"ERR2: "<<parser2.errorMsg()<<"\n";
     }
 }
