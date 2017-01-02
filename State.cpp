@@ -64,18 +64,66 @@ State::State(size_t argc, char* argv[])
                 }
             }
         }else{
-            setError(std::string(flag.append(" passed but no value given to use with");
+            setError(std::string(flag.append(" passed but no value given to use with")));
             noErrors = false;
         }
     }//end while for reading arguments
     if(noErrors){
         readConfig();
     }
+    std::cout<<"i: "<<m_inputPath<<std::endl;
+    std::cout<<"o: "<<m_outputPath<<std::endl;
+    std::cout<<"c: "<<m_configPath<<std::endl;
+    std::cout<<"O: "<<m_opcodePath<<std::endl;
+}
+
+void State::readPathFromConfig(std::string& dest, std::string pathName, std::ifstream& ss, std::string& comment){
+    std::string line;
+    bool goodSS = true;
+    bool goodLP = true;
+    std::string gotPath = "";
+    do{
+        goodSS = std::getline(ss, line);
+        LineParser lp(line, comment);
+        gotPath = lp.getFilePath();
+        goodLP = !lp.bad();
+    }while(goodSS && gotPath.empty());
+    if(goodSS && !gotPath.empty()){
+        if(dest.empty()){ //only do if no flag has already set it
+            dest = gotPath;
+            if(!goodLP){
+                std::ostringstream ost;
+                ost <<"Couldn't parse: "<<line<<" Failed to parse "<<pathName<<" file path given in Config File: "<<m_configPath;
+                setError(ost.str());
+            }
+        }
+    }else{
+        std::ostringstream ost;
+        ost <<"Failed to get line of file containing "<<pathName<<" file path. Config File: "<<m_configPath;
+        setError(ost.str());
+    }
 }
 
 void State::readConfig(){
     std::ifstream ss;
     openFileStream(ss, m_configPath);
+    if(!m_bad){
+        std::string line, comment="#";
+        std::getline(ss, line);
+        /**TODO: read comment symbol wanted, for now just ignore**/
+        //get input path
+        if(!ss.fail()){
+            readPathFromConfig(m_inputPath, "input", ss, comment);
+        }
+        //get output path
+        if(!ss.fail()){
+            readPathFromConfig(m_outputPath, "output", ss, comment);
+        }
+        //get opcode path
+        if(!ss.fail()){
+            readPathFromConfig(m_opcodePath, "opcode", ss, comment);
+        }
+    }
 }
 
 void State::openFileStream(std::ifstream& ss, const std::string& path){

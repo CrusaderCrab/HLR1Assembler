@@ -24,7 +24,7 @@ public:
     inline std::string errorMsg(){ return m_errorMsg; }
     inline bool eof() { return m_stream.eof(); }
     inline bool fail(){ return m_stream.fail() || m_bad; }
-    inline bool bad(){ return m_stream.bad(); }
+    inline bool bad(){ return m_stream.bad() || m_bad; }
 };
 }
 
