@@ -4,7 +4,7 @@
 			   ## More test comments
 ./out.hlr1b                # The default output file. Can be relative or absolute. 
 ./HLR1_Default_Opcodes.txt # The default opcode bindings for the instructions 
-false                      # Is Little-Endian. Either 'true' or 'false'. 
+01234                          # Is Little-Endian. Either '1'(true) or '0'(false). 
 #2                         # Register to store ret address from trap Overflow function 
 #2                         # Register to store ret address from trap underflow function 
 614400                     # Start address of code section in memory. Given as decimal. Default is 600Kbytes 

@@ -22,7 +22,8 @@ private:
     void readConfig();
     void openFileStream(std::ifstream& ss, const std::string& path);
     void setError(std::string s);
-    void readPathFromConfig(std::string& dest, std::string pathName, std::ifstream& ss, std::string& comment);
+    void readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment);
+    uint32_t readIntFromConfig(const std::string& intName, std::ifstream& ss, const std::string& comment);
 public:
     State(size_t argc, char* argv[]);
     uint32_t getWord(uint32_t addr);

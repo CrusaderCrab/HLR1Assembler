@@ -24,7 +24,7 @@ namespace HLR1{
 
 State::State(size_t argc, char* argv[])
 : m_configPath("./HLR1_Default_Config.txt"), m_littleEndian(false),
-  m_trapOVRegister(2), m_trapUNRegister(2){
+  m_trapOVRegister(2), m_trapUNRegister(2), m_codeStartAddr(0){
     bool noErrors = true;
     size_t i = 1;
     while(i < argc){
@@ -75,9 +75,11 @@ State::State(size_t argc, char* argv[])
     std::cout<<"o: "<<m_outputPath<<std::endl;
     std::cout<<"c: "<<m_configPath<<std::endl;
     std::cout<<"O: "<<m_opcodePath<<std::endl;
+    std::cout<<"L: "<<m_littleEndian<<std::endl;
+    std::cout<<"C: "<<m_codeStartAddr<<std::endl;
 }
 
-void State::readPathFromConfig(std::string& dest, std::string pathName, std::ifstream& ss, std::string& comment){
+void State::readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment){
     std::string line;
     bool goodSS = true;
     bool goodLP = true;
@@ -104,6 +106,29 @@ void State::readPathFromConfig(std::string& dest, std::string pathName, std::ifs
     }
 }
 
+uint32_t State::readIntFromConfig(const std::string& intName, std::ifstream& ss, const std::string& comment){
+    std::string line;
+    bool goodSS = true;
+    bool goodLP = true;
+    uint32_t gotValue = 0;
+    do{
+        goodSS = std::getline(ss, line);
+        LineParser lp(line, comment);
+        gotValue = lp.getValue();
+        goodLP = !lp.bad();
+    }while(goodSS && !goodLP);
+    if(!goodSS){
+        std::ostringstream ost;
+        ost <<"Failed to get line of file containing the "<<intName<<". Config File: "<<m_configPath;
+        setError(ost.str());
+    }else if(!goodLP){
+        std::ostringstream ost;
+        ost <<"Couldn't parse \""<<line<<"\" as the "<<intName<<". Used Config File: "<<m_configPath;
+        setError(ost.str());
+    }
+    return gotValue;
+}
+
 void State::readConfig(){
     std::ifstream ss;
     openFileStream(ss, m_configPath);
@@ -112,16 +137,28 @@ void State::readConfig(){
         std::getline(ss, line);
         /**TODO: read comment symbol wanted, for now just ignore**/
         //get input path
-        if(!ss.fail()){
+        if(!ss.fail() && !m_bad){
             readPathFromConfig(m_inputPath, "input", ss, comment);
         }
         //get output path
-        if(!ss.fail()){
+        if(!ss.fail() && !m_bad){
             readPathFromConfig(m_outputPath, "output", ss, comment);
         }
         //get opcode path
-        if(!ss.fail()){
+        if(!ss.fail() && !m_bad){
             readPathFromConfig(m_opcodePath, "opcode", ss, comment);
+        }
+        //get if little endian
+        if(!ss.fail() && !m_bad){
+            uint32_t dest = readIntFromConfig("little endian flag", ss, comment);
+            m_littleEndian = m_littleEndian | static_cast<bool>(dest);
+        }
+        //get code start address
+        if(!ss.fail() && !m_bad){
+            uint32_t dest = readIntFromConfig("code start address", ss, comment);
+            if(m_codeStartAddr == 0){
+                m_codeStartAddr = dest;
+            }
         }
     }
 }
