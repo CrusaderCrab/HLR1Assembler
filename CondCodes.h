@@ -1,4 +1,4 @@
-
+#pragma once
 namespace HLR1{
 
 enum class CondCode{

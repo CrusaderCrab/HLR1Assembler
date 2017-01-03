@@ -20,10 +20,12 @@ private:
     bool m_bad;
     std::string m_errorMsg;
     void readConfig();
+    void readOpcodesAndCondCodes();
     void openFileStream(std::ifstream& ss, const std::string& path);
     void setError(std::string s);
     void readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment);
     uint32_t readIntFromConfig(const std::string& intName, std::ifstream& ss, const std::string& comment);
+    uint32_t stringToBits(const std::string& longbits);
 public:
     State(size_t argc, char* argv[]);
     uint32_t getWord(uint32_t addr);

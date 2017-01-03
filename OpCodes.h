@@ -1,4 +1,4 @@
-
+#pragma once
 namespace HLR1{
 
 enum class OpCode{
@@ -40,6 +40,5 @@ enum class OpCode{
 };
 
 inline OpCode operator++( OpCode& x ) { return x = (OpCode)((uint32_t)(x) + 1); }
-
 
 }

@@ -24,7 +24,8 @@ namespace HLR1{
 
 State::State(size_t argc, char* argv[])
 : m_configPath("./HLR1_Default_Config.txt"), m_littleEndian(false),
-  m_trapOVRegister(2), m_trapUNRegister(2), m_codeStartAddr(0){
+  m_trapOVRegister(2), m_trapUNRegister(2), m_codeStartAddr(0),
+  m_bad(false){
     bool noErrors = true;
     size_t i = 1;
     while(i < argc){
@@ -70,6 +71,9 @@ State::State(size_t argc, char* argv[])
     }//end while for reading arguments
     if(noErrors){
         readConfig();
+        if(!m_bad){
+            readOpcodesAndCondCodes();
+        }
     }
     std::cout<<"i: "<<m_inputPath<<std::endl;
     std::cout<<"o: "<<m_outputPath<<std::endl;
@@ -77,6 +81,16 @@ State::State(size_t argc, char* argv[])
     std::cout<<"O: "<<m_opcodePath<<std::endl;
     std::cout<<"L: "<<m_littleEndian<<std::endl;
     std::cout<<"C: "<<m_codeStartAddr<<std::endl;
+    std::cout<<"X: "<<m_opcodes.size()<<std::endl;
+    std::cout<<"D: "<<m_condCodes.size()<<std::endl;
+    for(uint32_t i : m_opcodes){
+        std::cout<<" "<<i;
+    }
+    std::cout<<std::endl;
+    for(uint32_t i : m_condCodes){
+        std::cout<<" "<<i;
+    }
+
 }
 
 void State::readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment){
@@ -161,6 +175,58 @@ void State::readConfig(){
             }
         }
     }
+    std::cout<<"End config: "<<m_bad<<std::endl;
+    ss.close();
+}
+
+void State::readOpcodesAndCondCodes(){
+    std::ifstream ss;
+    openFileStream(ss, m_opcodePath);
+    std::cout<<"Opened opcode: "<<m_bad<<std::endl;
+    if(!m_bad){
+        std::string line, comment="#";
+        std::getline(ss, line);
+        /**TODO: read comment symbol wanted, for now just ignore**/
+        //read opcodes
+        for(OpCode code = OpCode::FIRST; code < OpCode::END; ++code){
+            std::string longBits;
+            readPathFromConfig(longBits, "some opcode", ss, comment);
+            if(m_bad){
+                return;
+            }
+            uint32_t bits = stringToBits(longBits);
+            if(m_bad){
+                std::ostringstream ost;
+                ost << "\"" << longBits << "\" is not a valid binary value. OpCode File: "<< m_opcodePath;
+                setError(ost.str());
+            }else if(bits > 127){
+                std::ostringstream ost;
+                ost << "\"" << longBits << "\" is more than 7 bits longs, so it can not be an OpCode. OpCode File: "<< m_opcodePath;
+                setError(ost.str());
+            }
+            m_opcodes.push_back(bits);
+        }
+        //read CondCodes
+        for(CondCode code = CondCode::FIRST; code < CondCode::END; ++code){
+            std::string longBits;
+            readPathFromConfig(longBits, "some condcode", ss, comment);
+            if(m_bad){
+                return;
+            }
+            uint32_t bits = stringToBits(longBits);
+            m_condCodes.push_back(bits);
+            if(m_bad){
+                std::ostringstream ost;
+                ost << "\"" << longBits << "\" is not a valid binary value. CondCode File: "<< m_opcodePath;
+                setError(ost.str());
+            }else if(bits > 32){
+                std::ostringstream ost;
+                ost << "\"" << longBits << "\" is more than 5 bits longs, so it can not be an CondCode. CondCode File: "<< m_opcodePath;
+                setError(ost.str());
+            }
+        }
+    }
+    ss.close();
 }
 
 void State::openFileStream(std::ifstream& ss, const std::string& path){
@@ -177,6 +243,20 @@ void State::openFileStream(std::ifstream& ss, const std::string& path){
         setError(std::string("Fail bit set when opening file: ").append(path));
         return;
     }
+}
+
+uint32_t State::stringToBits(const std::string& str){
+    uint32_t bits = 0;
+    for(char ch : str){
+        if(ch=='1'){
+            bits += 1;
+        }else if(ch != '0'){
+            m_bad = true;
+        }
+        bits <<= 1;
+    }
+    bits >>= 1; //undo last shift right
+    return bits;
 }
 
 void State::setError(std::string s){
