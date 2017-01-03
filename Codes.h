@@ -1,6 +1,6 @@
 #pragma once
+#include <string>
 namespace HLR1{
-
 enum class OpCode{
     ADD,
     ADDC,
@@ -41,4 +41,26 @@ enum class OpCode{
 
 inline OpCode operator++( OpCode& x ) { return x = (OpCode)((uint32_t)(x) + 1); }
 
+extern std::string OpCodeNames[];
+
+enum class CondCode{
+    EQ,
+    NE,
+    LT,
+    LE,
+    GT,
+    GE,
+    BL,
+    BE,
+    AB,
+    AE,
+    END,
+    FIRST=EQ
+};
+
+inline CondCode operator++( CondCode& x ) { return x = (CondCode)((uint32_t)(x) + 1); }
+
+extern std::string CondCodeNames[];
+
 }
+

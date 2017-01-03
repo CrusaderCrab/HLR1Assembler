@@ -6,3 +6,5 @@ HLR1_Assembler.layout
 Parser.h
 Parser.cpp
 Tests/ParserTest.cpp
+OpCodes.h
+CondCodes.h

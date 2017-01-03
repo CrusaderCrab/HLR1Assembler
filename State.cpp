@@ -1,13 +1,13 @@
-#include "State.h"
-#include "LineParser.h"
-#include "OpCodes.h"
-#include "CondCodes.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Codes.h"
+#include "State.h"
+#include "LineParser.h"
 
 namespace HLR1{
 
+    int ribble;
     /*
     std::string m_inputPath;
     std::string m_outputPath;
