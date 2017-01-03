@@ -1,4 +1,3 @@
-#
 ./in.hlr1s                 # The default input file. Can be relative or absolute. 
 			   ## Test comments to test program
 			   ## More test comments
@@ -6,7 +5,7 @@
 #
 #
 #
-./HLR1_Default_Opcodes.txt # The default opcode bindings for the instructions 
+../../tests/HLR1_Test_Opcodes.txt # The default opcode bindings for the instructions 
 0                          # Is Little-Endian. Either '1'(true) or '0'(false). 
 #2                         # Register to store ret address from trap Overflow function 
 #2                         # Register to store ret address from trap underflow function 

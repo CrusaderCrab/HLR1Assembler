@@ -33,8 +33,6 @@ State::State(size_t argc, char* argv[])
 : m_configPath("./HLR1_Default_Config.txt"), m_littleEndian(false),
   m_trapOVRegister(2), m_trapUNRegister(2), m_codeStartAddr(0),
   m_bad(false){
-
-    bool noErrors = true;
     size_t i = 1;
     while(i < argc){
         std::string flag(argv[i]);
@@ -44,38 +42,37 @@ State::State(size_t argc, char* argv[])
         }else if(i < argc){
             std::string value(argv[i]);
             i++;
-            if(flag == "-i" && noErrors){
+            if(flag == "-i" && !m_bad){
                 m_inputPath = value;
-            }else if(flag == "-o" && noErrors){
+            }else if(flag == "-o" && !m_bad){
                 m_outputPath = value;
-            }else if(flag == "-oc" && noErrors){
+            }else if(flag == "-oc" && !m_bad){
                 m_opcodePath = value;
-            }else if(flag == "-c" && noErrors){
+            }else if(flag == "-c" && !m_bad){
                 m_configPath = value;
-            }else if(flag == "m"){
+            }else if(flag == "-m"){
                 LineParser np(value);
                 uint32_t startAddr = np.getValue();
                 if(np.bad() || startAddr == LineParser::s_BAD_NUMBER){
                     std::ostringstream ess;
                     ess<<"Could not parse "<<value<<" as a number for "<<flag;
                     setError(ess.str());
-                    noErrors = false;
-                }else{
-                    m_codeStartAddr = startAddr;
                 }
+                m_codeStartAddr = startAddr;
+            }else{
+                setError(flag.append(" is not a valid argument."));
             }
         }else{
             setError(std::string(flag.append(" passed but no value given to use with")));
-            noErrors = false;
         }
     }//end while for reading arguments
-    if(noErrors){
+    if(!m_bad){
         readConfig();
         if(!m_bad){
             readOpcodesAndCondCodes();
         }
     }
-    std::cout<<"in: "<<m_inputPath<<std::endl;
+    /*std::cout<<"in: "<<m_inputPath<<std::endl;
     std::cout<<"out: "<<m_outputPath<<std::endl;
     std::cout<<"con: "<<m_configPath<<std::endl;
     std::cout<<"Opc: "<<m_opcodePath<<std::endl;
@@ -89,7 +86,7 @@ State::State(size_t argc, char* argv[])
     std::cout<<std::endl;
     for(uint32_t i : m_condCodes){
         std::cout<<" "<<i;
-    }
+    }*/
 
 }
 
@@ -147,8 +144,6 @@ void State::readConfig(){
     openFileStream(ss, m_configPath,  "Config Path");
     if(!m_bad){
         std::string line, comment="#";
-        std::getline(ss, line);
-        /**TODO: read comment symbol wanted, for now just ignore**/
         //get input path
         if(!ss.fail() && !m_bad){
             readPath(line, "input file path", ss, comment, m_configPath);
@@ -196,8 +191,6 @@ void State::readOpcodesAndCondCodes(){
     openFileStream(ss, m_opcodePath, "OpCode Path");
     if(!m_bad){
         std::string line, comment="#";
-        std::getline(ss, line);
-        /**TODO: read comment symbol wanted, for now just ignore**/
         //read opcodes
         for(OpCode code = OpCode::FIRST; code < OpCode::END; ++code){
             std::string longBits;

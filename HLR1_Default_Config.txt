@@ -1,4 +1,3 @@
-#
 ./in.hlr1s                 # The default input file. Can be relative or absolute. 
 			   ## Test comments to test program
 			   ## More test comments
