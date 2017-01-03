@@ -63,6 +63,7 @@ std::string LineParser::getFilePath(){
             return std::string();
         }
     }
+    return std::string();
 }
 
 uint32_t LineParser::getValue(){

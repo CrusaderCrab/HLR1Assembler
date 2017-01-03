@@ -2,10 +2,14 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-namespace HLR1{
 
+
+namespace HLR1{
 class State{
 private:
+#ifdef CATCH_TESTING
+public:
+#endif // CATCH_TESTING
     std::string m_inputPath;
     std::string m_outputPath;
     std::string m_configPath;
@@ -19,15 +23,17 @@ private:
     uint32_t m_codeStartAddr;
     bool m_bad;
     std::string m_errorMsg;
+
     void readConfig();
     void readOpcodesAndCondCodes();
     void openFileStream(std::ifstream& ss, const std::string& path);
     void setError(std::string s);
-    void readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment);
+    void readPath(std::string& dest, const std::string& pathName, std::ifstream& ss,
+                  const std::string& comment, const std::string& path);
     uint32_t readIntFromConfig(const std::string& intName, std::ifstream& ss, const std::string& comment);
     uint32_t stringToBits(const std::string& longbits);
 public:
-    State(size_t argc, char* argv[]);
+    State(size_t argc=0, char* argv[]=0);
     uint32_t getWord(uint32_t addr);
     void putWord(uint32_t addr, uint32_t v);
     void putHalfWord(uint32_t addr, uint32_t v);
@@ -44,4 +50,5 @@ public:
     inline uint32_t codeStartAddr(){  return m_codeStartAddr; }
 };
 }
+
 

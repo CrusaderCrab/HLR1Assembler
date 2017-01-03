@@ -265,6 +265,11 @@ TEST_CASE( "Correctly successfully parse filepaths", "[LineParser]") {
     REQUIRE(p.getFilePath()=="");
     REQUIRE(p.fail());
     REQUIRE(!p.bad());
+    LineParser p2("", "#");
+    REQUIRE(p.getFilePath()=="");
+    REQUIRE(p.fail());
+    REQUIRE(!p.bad());
+
 }
 
 }

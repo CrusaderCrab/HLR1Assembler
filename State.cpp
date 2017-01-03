@@ -75,7 +75,7 @@ State::State(size_t argc, char* argv[])
             readOpcodesAndCondCodes();
         }
     }
-    std::cout<<"i: "<<m_inputPath<<std::endl;
+    /*std::cout<<"i: "<<m_inputPath<<std::endl;
     std::cout<<"o: "<<m_outputPath<<std::endl;
     std::cout<<"c: "<<m_configPath<<std::endl;
     std::cout<<"O: "<<m_opcodePath<<std::endl;
@@ -89,11 +89,12 @@ State::State(size_t argc, char* argv[])
     std::cout<<std::endl;
     for(uint32_t i : m_condCodes){
         std::cout<<" "<<i;
-    }
+    }*/
 
 }
 
-void State::readPathFromConfig(std::string& dest, const std::string& pathName, std::ifstream& ss, const std::string& comment){
+void State::readPath(std::string& dest, const std::string& pathName, std::ifstream& ss,
+                     const std::string& comment, const std::string& path){
     std::string line;
     bool goodSS = true;
     bool goodLP = true;
@@ -102,20 +103,18 @@ void State::readPathFromConfig(std::string& dest, const std::string& pathName, s
         goodSS = std::getline(ss, line);
         LineParser lp(line, comment);
         gotPath = lp.getFilePath();
-        goodLP = !lp.bad();
-    }while(goodSS && gotPath.empty());
-    if(goodSS && !gotPath.empty()){
-        if(dest.empty()){ //only do if no flag has already set it
-            dest = gotPath;
-            if(!goodLP){
-                std::ostringstream ost;
-                ost <<"Couldn't parse: "<<line<<" Failed to parse "<<pathName<<" file path given in Config File: "<<m_configPath;
-                setError(ost.str());
-            }
+        goodLP = !lp.fail();
+    }while(goodSS && !goodLP);
+    if(goodSS && goodLP){
+        dest = gotPath;
+        if(!goodLP){
+            std::ostringstream ost;
+            ost <<"Couldn't parse: "<<line<<" Failed to parse "<<pathName<<" given in file: "<<path;
+            setError(ost.str());
         }
     }else{
         std::ostringstream ost;
-        ost <<"Failed to get line of file containing "<<pathName<<" file path. Config File: "<<m_configPath;
+        ost <<"Failed to get line of file containing "<<pathName<<". file: "<<path;
         setError(ost.str());
     }
 }
@@ -129,7 +128,7 @@ uint32_t State::readIntFromConfig(const std::string& intName, std::ifstream& ss,
         goodSS = std::getline(ss, line);
         LineParser lp(line, comment);
         gotValue = lp.getValue();
-        goodLP = !lp.bad();
+        goodLP = !lp.fail();
     }while(goodSS && !goodLP);
     if(!goodSS){
         std::ostringstream ost;
@@ -151,20 +150,25 @@ void State::readConfig(){
         std::getline(ss, line);
         /**TODO: read comment symbol wanted, for now just ignore**/
         //get input path
-        if(!ss.fail() && !m_bad){
-            readPathFromConfig(m_inputPath, "input", ss, comment);
+        if(!ss.fail() && !m_bad && m_inputPath.empty()){
+            readPath(m_inputPath, "input file path", ss, comment, m_configPath);
         }
         //get output path
-        if(!ss.fail() && !m_bad){
-            readPathFromConfig(m_outputPath, "output", ss, comment);
+        if(!ss.fail() && !m_bad && m_outputPath.empty()){
+            readPath(m_outputPath, "output file path", ss, comment, m_configPath);
         }
         //get opcode path
-        if(!ss.fail() && !m_bad){
-            readPathFromConfig(m_opcodePath, "opcode", ss, comment);
+        if(!ss.fail() && !m_bad && m_opcodePath.empty()){
+            readPath(m_opcodePath, "opcode file path", ss, comment, m_configPath);
         }
         //get if little endian
         if(!ss.fail() && !m_bad){
             uint32_t dest = readIntFromConfig("little endian flag", ss, comment);
+            if(dest != 0 && dest != 1){
+                std::ostringstream ost;
+                ost << "Little Endian flag must be 0/1. Parsed as: "<<dest<<" from file: "<<m_configPath;
+                setError(ost.str());
+            }
             m_littleEndian = m_littleEndian | static_cast<bool>(dest);
         }
         //get code start address
@@ -175,14 +179,12 @@ void State::readConfig(){
             }
         }
     }
-    std::cout<<"End config: "<<m_bad<<std::endl;
     ss.close();
 }
 
 void State::readOpcodesAndCondCodes(){
     std::ifstream ss;
     openFileStream(ss, m_opcodePath);
-    std::cout<<"Opened opcode: "<<m_bad<<std::endl;
     if(!m_bad){
         std::string line, comment="#";
         std::getline(ss, line);
@@ -190,7 +192,7 @@ void State::readOpcodesAndCondCodes(){
         //read opcodes
         for(OpCode code = OpCode::FIRST; code < OpCode::END; ++code){
             std::string longBits;
-            readPathFromConfig(longBits, "some opcode", ss, comment);
+            readPath(longBits, "some opcode", ss, comment, m_opcodePath);
             if(m_bad){
                 return;
             }
@@ -209,7 +211,7 @@ void State::readOpcodesAndCondCodes(){
         //read CondCodes
         for(CondCode code = CondCode::FIRST; code < CondCode::END; ++code){
             std::string longBits;
-            readPathFromConfig(longBits, "some condcode", ss, comment);
+            readPath(longBits, "some condcode", ss, comment, m_opcodePath);
             if(m_bad){
                 return;
             }
