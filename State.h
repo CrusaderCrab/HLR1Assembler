@@ -26,7 +26,7 @@ public:
 
     void readConfig();
     void readOpcodesAndCondCodes();
-    void openFileStream(std::ifstream& ss, const std::string& path);
+    void openFileStream(std::ifstream& ss, const std::string& path, const std::string& pathName);
     void setError(std::string s);
     void readPath(std::string& dest, const std::string& pathName, std::ifstream& ss,
                   const std::string& comment, const std::string& path);

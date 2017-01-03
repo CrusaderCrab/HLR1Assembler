@@ -22,10 +22,18 @@ namespace HLR1{
     uint32_t m_codeStartAddr;
     */
 
+    /***
+        BUGS:
+        1) Allows arguments to pass in empty file path like: " " or "\t" where \t is the literal tab character
+           e.g. > HLR1_Assembler.exe -i " "
+           Sets the input path to " "
+    ***/
+
 State::State(size_t argc, char* argv[])
 : m_configPath("./HLR1_Default_Config.txt"), m_littleEndian(false),
   m_trapOVRegister(2), m_trapUNRegister(2), m_codeStartAddr(0),
   m_bad(false){
+
     bool noErrors = true;
     size_t i = 1;
     while(i < argc){
@@ -36,22 +44,14 @@ State::State(size_t argc, char* argv[])
         }else if(i < argc){
             std::string value(argv[i]);
             i++;
-            LineParser fp(value);
-            std::string path = fp.getFilePath();
-            if(flag == "-i" || flag == "-o" || flag == "-oc" || flag == "-c"){
-                    std::ostringstream ess;
-                    ess<<"Could not parse "<<value<<" as a filepath for "<<flag;
-                    setError(ess.str());
-                    noErrors = false;
-            }
-            if(flag == "-i" && !fp.bad() && noErrors){
-                m_inputPath = path;
-            }else if(flag == "-o" && !fp.bad() && noErrors){
-                m_outputPath = path;
-            }else if(flag == "-oc" && !fp.bad() && noErrors){
-                m_opcodePath = path;
-            }else if(flag == "-c" && !fp.bad() && noErrors){
-                m_configPath = path;
+            if(flag == "-i" && noErrors){
+                m_inputPath = value;
+            }else if(flag == "-o" && noErrors){
+                m_outputPath = value;
+            }else if(flag == "-oc" && noErrors){
+                m_opcodePath = value;
+            }else if(flag == "-c" && noErrors){
+                m_configPath = value;
             }else if(flag == "m"){
                 LineParser np(value);
                 uint32_t startAddr = np.getValue();
@@ -75,21 +75,21 @@ State::State(size_t argc, char* argv[])
             readOpcodesAndCondCodes();
         }
     }
-    /*std::cout<<"i: "<<m_inputPath<<std::endl;
-    std::cout<<"o: "<<m_outputPath<<std::endl;
-    std::cout<<"c: "<<m_configPath<<std::endl;
-    std::cout<<"O: "<<m_opcodePath<<std::endl;
-    std::cout<<"L: "<<m_littleEndian<<std::endl;
-    std::cout<<"C: "<<m_codeStartAddr<<std::endl;
-    std::cout<<"X: "<<m_opcodes.size()<<std::endl;
-    std::cout<<"D: "<<m_condCodes.size()<<std::endl;
+    std::cout<<"in: "<<m_inputPath<<std::endl;
+    std::cout<<"out: "<<m_outputPath<<std::endl;
+    std::cout<<"con: "<<m_configPath<<std::endl;
+    std::cout<<"Opc: "<<m_opcodePath<<std::endl;
+    std::cout<<"Lit: "<<m_littleEndian<<std::endl;
+    std::cout<<"Cstart: "<<m_codeStartAddr<<std::endl;
+    std::cout<<"XopVec: "<<m_opcodes.size()<<std::endl;
+    std::cout<<"DcondVec: "<<m_condCodes.size()<<std::endl;
     for(uint32_t i : m_opcodes){
         std::cout<<" "<<i;
     }
     std::cout<<std::endl;
     for(uint32_t i : m_condCodes){
         std::cout<<" "<<i;
-    }*/
+    }
 
 }
 
@@ -144,22 +144,31 @@ uint32_t State::readIntFromConfig(const std::string& intName, std::ifstream& ss,
 
 void State::readConfig(){
     std::ifstream ss;
-    openFileStream(ss, m_configPath);
+    openFileStream(ss, m_configPath,  "Config Path");
     if(!m_bad){
         std::string line, comment="#";
         std::getline(ss, line);
         /**TODO: read comment symbol wanted, for now just ignore**/
         //get input path
-        if(!ss.fail() && !m_bad && m_inputPath.empty()){
-            readPath(m_inputPath, "input file path", ss, comment, m_configPath);
+        if(!ss.fail() && !m_bad){
+            readPath(line, "input file path", ss, comment, m_configPath);
+            if(m_inputPath.empty()){
+                m_inputPath = line;
+            }
         }
         //get output path
-        if(!ss.fail() && !m_bad && m_outputPath.empty()){
-            readPath(m_outputPath, "output file path", ss, comment, m_configPath);
+        if(!ss.fail() && !m_bad){
+            readPath(line, "output file path", ss, comment, m_configPath);
+            if(m_outputPath.empty()){
+                m_outputPath = line;
+            }
         }
         //get opcode path
         if(!ss.fail() && !m_bad && m_opcodePath.empty()){
-            readPath(m_opcodePath, "opcode file path", ss, comment, m_configPath);
+            readPath(line, "opcode file path", ss, comment, m_configPath);
+            if(m_opcodePath.empty()){
+                m_opcodePath = line;
+            }
         }
         //get if little endian
         if(!ss.fail() && !m_bad){
@@ -184,7 +193,7 @@ void State::readConfig(){
 
 void State::readOpcodesAndCondCodes(){
     std::ifstream ss;
-    openFileStream(ss, m_opcodePath);
+    openFileStream(ss, m_opcodePath, "OpCode Path");
     if(!m_bad){
         std::string line, comment="#";
         std::getline(ss, line);
@@ -231,10 +240,12 @@ void State::readOpcodesAndCondCodes(){
     ss.close();
 }
 
-void State::openFileStream(std::ifstream& ss, const std::string& path){
+void State::openFileStream(std::ifstream& ss, const std::string& path, const std::string& pathName){
     ss.open(path.c_str());
     if(!ss.is_open()){
-        setError(std::string("Couldn't open file: ").append(path));
+        std::ostringstream ost;
+        ost <<"Couldn't open path to "<<pathName<<" Given Path: "<<path;
+        setError(ost.str());
         return;
     }
     if(ss.bad()){
