@@ -1,1 +1,1 @@
-An Assembler for the HLR1 Emulator.
+An Assembler for the HLR1 Simulator.

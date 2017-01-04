@@ -41,7 +41,8 @@ enum class OpCode{
 
 inline OpCode operator++( OpCode& x ) { return x = (OpCode)((uint32_t)(x) + 1); }
 
-extern std::string OpCodeNames[];
+extern const std::string g_opCodeNames[];
+extern const size_t g_opCodeNamesLength;
 
 enum class CondCode{
     EQ,
@@ -60,7 +61,8 @@ enum class CondCode{
 
 inline CondCode operator++( CondCode& x ) { return x = (CondCode)((uint32_t)(x) + 1); }
 
-extern std::string CondCodeNames[];
+extern const std::string g_condCodeNames[];
+extern const size_t g_condCodeNamesLength;
 
 }
 

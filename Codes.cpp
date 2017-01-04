@@ -2,7 +2,7 @@
 
 namespace HLR1{
 
-std::string OpCodeNames[] = {
+const std::string g_opCodeNames[] = {
     "ADD",
     "ADDC",
     "SUB",
@@ -37,8 +37,9 @@ std::string OpCodeNames[] = {
     "RESERVED",
     "HLR1"
 };
+const uint32_t g_opCodeNamesLength = sizeof(g_opCodeNames)/sizeof(std::string);
 
-std::string CondCodeNames[] = {
+const std::string g_condCodeNames[] = {
     "EQ",
     "NE",
     "LT",
@@ -50,5 +51,6 @@ std::string CondCodeNames[] = {
     "AB",
     "AE"
 };
+const size_t g_condCodeNamesLength = sizeof(g_condCodeNames)/sizeof(std::string);
 
 }
