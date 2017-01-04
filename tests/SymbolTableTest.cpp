@@ -62,7 +62,7 @@ tt(" Smackering of correct (and unfailing) usage of Label Symbol Tables.", "[Sym
 
 }
 tt(" A smackering of correct (and failing) usages of Labels SymbolTable", "[SymbolTable]"){
-    /*SymbolTable st;
+    SymbolTable st;
     //valid on construction
     rr(!st.fail());
     //fails on getting non-entered label
@@ -72,7 +72,21 @@ tt(" A smackering of correct (and failing) usages of Labels SymbolTable", "[Symb
     //unset failure
     st.unsetFail();
     rr(!st.fail());
-    rr(st.getErrorMsg()==std::string());*/
+    rr(st.getErrorMsg()==std::string());
+    //double add a label
+    st.addLabel("Yes1", 1234);
+    rr(!st.fail());
+    st.addLabel("Yes1", 2345);
+    rr(st.fail());
+    st.unsetFail();
+    //set the address of a label that already has one
+    st.setAddress("Yes1", 3456);
+    rr(st.fail());
+    st.unsetFail();
+    //remove label usages on unentered label
+    st.removeLabelUsages("No1");
+    rr(st.fail());
+    st.unsetFail();
 }
 
 }

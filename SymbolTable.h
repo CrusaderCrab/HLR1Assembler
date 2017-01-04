@@ -23,7 +23,6 @@ class SymbolTable{
 public:
     SymbolTable();
     void addLabel(const std::string& label, uint32_t addr);
-    void setLabelAddr(const std::string& label, uint32_t addr);
     Label getLabel(const std::string& label);
     void addLabelUsage(const std::string& label, OpCode ins, uint32_t addr);
     void removeLabelUsages(const std::string& label);
