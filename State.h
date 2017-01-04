@@ -9,12 +9,11 @@ class State{
 private:
 #ifdef CATCH_TESTING
 public:
-#endif // CATCH_TESTING
+#endif
     std::string m_inputPath;
     std::string m_outputPath;
     std::string m_configPath;
     std::string m_opcodePath;
-    std::vector<uint32_t> m_binary;
     std::vector<uint32_t> m_opcodes;
     std::vector<uint32_t> m_condCodes;
     bool m_littleEndian;
