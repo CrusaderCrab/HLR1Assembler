@@ -3,15 +3,20 @@
 #include <unordered_map>
 #include <vector>
 #include "Codes.h"
+/** SymbolTable (15/01/2017)
+Keeps track of the labels used in the code being assembled.
+Tracks the location of every encountered label and the instructions
+that need to be backpatched later.
+*/
 namespace HLR1{
-struct LabelUsage{
+struct LabelUsage{ //an instruction that needs to be back-patched later
     OpCode ins;
     uint32_t addr;
 };
-struct Label{
-    uint32_t addr;
-    bool valid;
-    std::vector<LabelUsage> toPatch;
+struct Label{ //all table information on a given label
+    uint32_t addr; //it's location in the code
+    bool valid; //Do we know the address of the label
+    std::vector<LabelUsage> toPatch; //instructions using this label that must be updated
 };
 class SymbolTable{
     bool m_bad;
