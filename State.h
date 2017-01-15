@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
-
+#include "Codes.h"
 
 namespace HLR1{
 class State{
@@ -36,17 +36,17 @@ public:
     uint32_t getWord(uint32_t addr);
     void putWord(uint32_t addr, uint32_t v);
     void putHalfWord(uint32_t addr, uint32_t v);
-    uint32_t getOpcode(std::string name);
-    uint32_t getCondCode(std::string cond);
+    uint32_t getOpCode(OpCode code) const;
+    uint32_t getCondCode(CondCode cond) const;
 
-    inline std::string inputPath(){  return m_inputPath; }
-    inline std::string outputPath(){ return m_outputPath; }
-    inline std::string configPath(){ return m_configPath; }
-    inline std::string opcodePath(){ return m_opcodePath; }
-    inline bool littleEndian(){ return m_littleEndian; }
-    inline uint32_t trapOVRegister(){ return m_trapOVRegister; }
-    inline uint32_t trapUNRegister(){ return m_trapUNRegister; }
-    inline uint32_t codeStartAddr(){  return m_codeStartAddr; }
+    inline std::string inputPath() const {  return m_inputPath; }
+    inline std::string outputPath() const { return m_outputPath; }
+    inline std::string configPath() const { return m_configPath; }
+    inline std::string opcodePath() const { return m_opcodePath; }
+    inline bool littleEndian() const { return m_littleEndian; }
+    inline uint32_t trapOVRegister() const { return m_trapOVRegister; }
+    inline uint32_t trapUNRegister() const { return m_trapUNRegister; }
+    inline uint32_t codeStartAddr() const {  return m_codeStartAddr; }
 };
 }
 

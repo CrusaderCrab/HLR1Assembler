@@ -2,7 +2,7 @@
 #include "../Binary.h"
 #define rr REQUIRE
 namespace HLR1{
-TEST_CASE("Binary: Smackering tests: big endian", "[Binary]"){
+TEST_CASE("Binary: Smackering of tests: big endian", "[Binary]"){
     Binary b(1000, false);
     rr(b.getOffset() == 0);
 
@@ -32,7 +32,7 @@ TEST_CASE("Binary: Smackering tests: big endian", "[Binary]"){
 
 }
 
-TEST_CASE("Binary: Smackering tests: little endian", "[Binary]"){
+TEST_CASE("Binary: Smackering of tests: little endian", "[Binary]"){
     Binary b(1000, true);
     rr(b.getOffset() == 0);
 

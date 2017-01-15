@@ -251,6 +251,15 @@ void State::openFileStream(std::ifstream& ss, const std::string& path, const std
     }
 }
 
+uint32_t State::getOpCode(OpCode code) const{
+    size_t ic = static_cast<size_t>(code);
+    return m_opcodes[ic];
+}
+uint32_t State::getCondCode(CondCode cond) const{
+    size_t ic = static_cast<size_t>(cond);
+    return m_condCodes[ic];
+}
+
 uint32_t State::stringToBits(const std::string& str){
     uint32_t bits = 0;
     for(char ch : str){
