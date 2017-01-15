@@ -234,7 +234,8 @@ TEST_CASE( "Correctly fail to get numbers", "[LineParser]") {
 std::string s_goodFilePathInput = " \
     yes1Path yes2Path/Yes2.1Path yes3Path\\Yes3.1Path \
     yes4Path\\Yes4.1Path\\Yes4.2Path                  \
-    \"yes5Path\" \"\" \" yes6Path\" \"yes7Path \"     \
+    \"yes5Path\" \"\" \" yes6Path\" \"yes7Path  \" \"Yes8 Path\" \
+    \"Yes 9 Path\"                                               \
 ";
 TEST_CASE( "Correctly successfully parse filepaths", "[LineParser]") {
     LineParser p(s_goodFilePathInput, "#");
@@ -256,10 +257,16 @@ TEST_CASE( "Correctly successfully parse filepaths", "[LineParser]") {
     REQUIRE(p.getFilePath()=="");
     REQUIRE(!p.fail());
     REQUIRE(!p.bad());
-    REQUIRE(p.getFilePath()=="yes6Path");
+    REQUIRE(p.getFilePath()==" yes6Path");
     REQUIRE(!p.fail());
     REQUIRE(!p.bad());
     REQUIRE(p.getFilePath()=="yes7Path");
+    REQUIRE(!p.fail());
+    REQUIRE(!p.bad());
+    REQUIRE(p.getFilePath()=="Yes8 Path");
+    REQUIRE(!p.fail());
+    REQUIRE(!p.bad());
+    REQUIRE(p.getFilePath()=="Yes 9 Path");
     REQUIRE(!p.fail());
     REQUIRE(!p.bad());
     REQUIRE(p.getFilePath()=="");

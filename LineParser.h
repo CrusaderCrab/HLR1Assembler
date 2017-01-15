@@ -1,7 +1,10 @@
 #pragma once
 #include <sstream>
 namespace HLR1{
-
+/** LineParser
+    Used to read a single line of text and parse values (e.g. numbers,
+    registers, opcodes) out of it. Can also handle line comments.
+*/
 class LineParser{
 private:
     std::istringstream m_stream;

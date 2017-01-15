@@ -10,7 +10,9 @@ namespace HLR1{
 /***    --BUGS--
         1) Allows many types of incorrect register definitions.
         2) Poor error messages
-        3) Unfound Filepath bugs nearly certainly
+        3) File paths containing more then a single contigous space will be ill-read
+           (e.g. "Folder\My   File.txt" )
+        4) Unfound Filepath bugs nearly certainly
 ***/
 
 LineParser::LineParser(std::string str, std::string lineComment)
@@ -38,22 +40,37 @@ std::string LineParser::getStr(){
     }
 }
 
+/** LineParser::getFilePath()
+    tries to return the next token(s) in the constructor string
+    as if they were a filepath. File paths containing whitespace
+    should be contained within double-quotes. Because of this
+    no file path can itself use double-quotes. Returns the
+    file path with double-quotes removed if used.
+    Sets fail bit if no input left to read from constructor string
+    or the an open double-quote has no matching closing quote.
+    Does not check if the filepath matches filepath norms/rules.
+*/
 std::string LineParser::getFilePath(){
     if(!fail()){
         std::string firstSeg = getStr();
         size_t quotePos = firstSeg.find('\"');
         if(quotePos==std::string::npos){
             return firstSeg;
-        }else if(quotePos==0){ //first position
+        }else if(quotePos==0){ //starts with double quote
+            //whitespace directly after double-quote or first token does not have closing quote
             if(firstSeg.length() == 1 || firstSeg[firstSeg.length() - 1] != '\"'){
                 std::string nextSection = getStr();
                 while( !fail() && nextSection[nextSection.length() - 1] != '\"'){
+                    firstSeg.append(" ");
                     firstSeg.append(nextSection);
                     nextSection = getStr();
                 }
                 if(nextSection[nextSection.length() - 1] != '\"'){
                     appendError(" : Unable to read file Path. Couldn't find close quote.");
                     return std::string();
+                }
+                if(nextSection!="\""){
+                    firstSeg.append(" ");
                 }
                 firstSeg.append(nextSection);
             }
